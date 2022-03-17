@@ -3,9 +3,10 @@ import XCTest
 
 final class oTests: XCTestCase {
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(o().text, "Hello, World!")
+        let filename = "SomeNumber"
+        try? o.file.out(4, filename: filename)
+        XCTAssertNoThrow(try o.file.in(filename: filename) as Int)
+        XCTAssertEqual(try? o.file.in(filename: filename), 4)
+        
     }
 }
