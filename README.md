@@ -37,12 +37,43 @@ XCTAssertThrowsError(try o.file.in(filename: filename) as Int)
 ```
 
 ### o.url
+```swift
+struct Post: Codable {
+    let userId: Int
+    let id: Int
+    let title: String
+    let body: String
+}
+
+// GET Request
+
+o.url.in(
+    url: URL(string: "api/posts")!,
+    successHandler: { (posts: [Post], response) in
+        print(posts)
+    }
+)
+
+// POST Request
+
+let post = Post(userId: 1, id: 1, title: "First!", body: "")
+
+try o.url.out(
+    url: URL(string: "api/posts/\(post.id)")!,
+    value: post,
+    successHandler: { data, response in
+        print(response)
+    }
+)
+```
+
 ### o.notification
 ```swift
 // Request Notification Authorization 
 o.notification.requestAuthorization()
 
-
+// Set UNUserNotificationCenter.current's delegate to `o.notification.delegate`
+o.notification.registerDelegate()
 
 // Schedule a Notification
 o.notification.post(
