@@ -9,6 +9,7 @@
 import UserNotifications
 
 public extension o.notification {
+    /// Update a new notification request
     static func update(
         request: UNNotificationRequest,
         withCompletionHandler completionHandler: ((Error?) -> Void)? = nil
@@ -17,6 +18,7 @@ public extension o.notification {
         post(request: request, withCompletionHandler: completionHandler)
     }
     
+    /// Update a new notification request
     static func update(
         id: String = UUID().uuidString,
         categoryIdentifier: String = UUID().uuidString,

@@ -9,12 +9,14 @@
 import UserNotifications
 
 public extension o.notification {
+    /// Get pending notifications
     static func getPendingNotification(
         completionHandler: @escaping ([UNNotificationRequest]) -> Void
     ) {
         board.getPendingNotificationRequests(completionHandler: completionHandler)
     }
     
+    /// Get delivered notifications
     static func getDeliveredNotifications(
         completionHandler: @escaping ([UNNotification]) -> Void
     ) {

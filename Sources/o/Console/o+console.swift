@@ -6,12 +6,15 @@
 //
 
 public extension o {
+    /// Input and Output using the console
     enum console { }
 }
 
 public extension o.console {
+    /// Read a string from the console
     static func `in`() -> String? { readLine() }
     
+    /// Print the value. Reports the file, line, and function that calls this function.
     static func out(
         _ value: Any...,
         separator: String = " ",

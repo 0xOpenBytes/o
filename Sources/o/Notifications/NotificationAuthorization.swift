@@ -9,6 +9,7 @@
 import UserNotifications
 
 public extension o.notification {
+    /// Request notification authorization
     static func requestAuthorization(
         options: UNAuthorizationOptions = [.alert, .sound, .badge],
         completionHandler: @escaping (Bool, Error?) -> Void = { _, _ in }
