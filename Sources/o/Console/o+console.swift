@@ -23,6 +23,7 @@ public extension o.console {
         line: Int = #line,
         function: String = #function
     ) {
-        print("(\(file)@\(line)) [\(function)]: \(value)", separator: separator, terminator: terminator)
+        print("(\(file)@\(line)) [\(function)]: ", terminator: "")
+        print(value, separator: separator, terminator: terminator)
     }
 }

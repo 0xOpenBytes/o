@@ -13,14 +13,14 @@ public extension o.notification {
     static func deleteDeliveredNotifications(
         identifiers: [String]
     ) {
-        board.removeDeliveredNotifications(withIdentifiers: identifiers)
+        center.removeDeliveredNotifications(withIdentifiers: identifiers)
     }
     
     /// Delete pending notifications
     static func deletePendingNotifications(
         identifiers: [String]
     ) {
-        board.removePendingNotificationRequests(withIdentifiers: identifiers)
+        center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
     
     // Delete delivered and pending notifications

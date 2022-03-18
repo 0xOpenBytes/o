@@ -14,7 +14,7 @@ public extension o.notification {
         request: UNNotificationRequest,
         withCompletionHandler completionHandler: ((Error?) -> Void)? = nil
     ) {
-        board.add(request, withCompletionHandler: completionHandler)
+        center.add(request, withCompletionHandler: completionHandler)
     }
     
     /// Create a new notification request
