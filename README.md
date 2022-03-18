@@ -4,7 +4,7 @@
 
 ## What is `o`?
 
-`o` is a simple framework that makes output and input easy. Output can be to a file, console, url, or notification. Input can be from a file, url, or console.
+`o` is a simple framework to output to a file, url, the console, or even register notification using UserNotifications. `o` can also get input from a file, url, or console.
 
 ## Where can `o` be used?
 
