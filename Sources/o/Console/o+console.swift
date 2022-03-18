@@ -6,18 +6,20 @@
 //
 
 public extension o {
-    enum console {
-        static func `in`() -> String? { readLine() }
-        
-        static func out(
-            _ value: Any...,
-            separator: String = " ",
-            terminator: String = "\n",
-            file: String = #fileID,
-            line: Int = #line,
-            function: String = #function
-        ) {
-            print("(\(file)@\(line)) [\(function)]: \(value)", separator: separator, terminator: terminator)
-        }
+    enum console { }
+}
+
+public extension o.console {
+    static func `in`() -> String? { readLine() }
+    
+    static func out(
+        _ value: Any...,
+        separator: String = " ",
+        terminator: String = "\n",
+        file: String = #fileID,
+        line: Int = #line,
+        function: String = #function
+    ) {
+        print("(\(file)@\(line)) [\(function)]: \(value)", separator: separator, terminator: terminator)
     }
 }
