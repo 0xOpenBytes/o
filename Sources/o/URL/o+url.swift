@@ -46,6 +46,11 @@ public extension o.url {
                         return
                     }
                     
+                    if let data = data as? Value {
+                        successHandler(data, response)
+                        return
+                    }
+                    
                     do {
                         let value = try JSONDecoder().decode(Value.self, from: data)
                         successHandler(value, response)
