@@ -15,7 +15,10 @@ public extension o {
 public extension o.file {
     /// The url used to read and write data
     static var documentDirectoryURL: URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        )[0]
     }
     
     /// Read a file's data as the type `Value`
@@ -29,7 +32,9 @@ public extension o.file {
     static func data(
         filename: String
     ) throws -> Data {
-        let fileData = try Data(contentsOf: documentDirectoryURL.appendingPathComponent(filename))
+        let fileData = try Data(
+            contentsOf: documentDirectoryURL.appendingPathComponent(filename)
+        )
         
         guard let base64DecodedData = Data(base64Encoded: fileData) else {
             return fileData

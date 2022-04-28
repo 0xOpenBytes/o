@@ -44,9 +44,14 @@ public extension o.notification {
         content.sound = sound
         content.attachments = attachments
         
-        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-        
-        post(request: request, withCompletionHandler: completionHandler)
+        post(
+            request: UNNotificationRequest(
+                identifier: id,
+                content: content,
+                trigger: trigger
+            ),
+            withCompletionHandler: completionHandler
+        )
     }
 }
 #endif

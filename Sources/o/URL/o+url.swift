@@ -16,12 +16,22 @@ public extension o.url {
     /// GET
     static func `in`<Value: Decodable>(
         url: URL,
-        headerFields: [String: String] = ["Content-Type": "application/json; charset=utf-8"],
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8"
+        ],
         successHandler: @escaping (Value, URLResponse) -> Void,
-        errorHandler: @escaping (Error) -> Void = { o.console.out($0.localizedDescription) },
-        noResponseHandler: @escaping () -> Void = { o.console.out("No URL Response") },
-        failureHandler: @escaping (URLResponse) -> Void = { o.console.out("No Data (\(dump($0)))") },
-        decodingErrorHandler: @escaping (Error) -> Void = { o.console.out($0.localizedDescription) }
+        errorHandler: @escaping (Error) -> Void = {
+            o.console.out($0.localizedDescription)
+        },
+        noResponseHandler: @escaping () -> Void = {
+            o.console.out("No URL Response")
+        },
+        failureHandler: @escaping (URLResponse) -> Void = {
+            o.console.out("No Data (\(dump($0)))")
+        },
+        decodingErrorHandler: @escaping (Error) -> Void = {
+            o.console.out($0.localizedDescription)
+        }
     ) {
         var request = URLRequest(url: url)
         
@@ -52,7 +62,8 @@ public extension o.url {
                     }
                     
                     do {
-                        let value = try JSONDecoder().decode(Value.self, from: data)
+                        let value = try JSONDecoder()
+                            .decode(Value.self, from: data)
                         successHandler(value, response)
                     } catch {
                         decodingErrorHandler(error)
@@ -66,7 +77,9 @@ public extension o.url {
     static func out<Value: Encodable>(
         url: URL,
         value: Value,
-        headerFields: [String: String] = ["Content-Type": "application/json; charset=utf-8"],
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8"
+        ],
         successHandler: @escaping (Data?, URLResponse?) -> Void,
         errorHandler: @escaping (Error) -> Void = { _ in }
     ) throws {

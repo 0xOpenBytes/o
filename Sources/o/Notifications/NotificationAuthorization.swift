@@ -14,7 +14,10 @@ public extension o.notification {
         options: UNAuthorizationOptions = [.alert, .sound, .badge],
         completionHandler: @escaping (Bool, Error?) -> Void = { _, _ in }
     ) {
-        center.requestAuthorization(options: options, completionHandler: completionHandler)
+        center.requestAuthorization(
+            options: options,
+            completionHandler: completionHandler
+        )
     }
 }
 #endif

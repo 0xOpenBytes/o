@@ -13,7 +13,9 @@ public extension o.notification {
     static func getPendingNotification(
         completionHandler: @escaping ([UNNotificationRequest]) -> Void
     ) {
-        center.getPendingNotificationRequests(completionHandler: completionHandler)
+        center.getPendingNotificationRequests(
+            completionHandler: completionHandler
+        )
     }
     
     /// Get delivered notifications
