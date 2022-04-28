@@ -14,7 +14,9 @@ public extension o {
 
 public extension o.file {
     /// The url used to read and write data
-    static var documentDirectoryURL: URL { FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] }
+    static var documentDirectoryURL: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
     
     /// Read a file's data as the type `Value`
     static func `in`<Value: Decodable>(
@@ -39,18 +41,26 @@ public extension o.file {
     /// Write data to a file
     static func out<Value: Encodable>(
         _ value: Value,
-        filename: String
+        filename: String,
+        base64Encoded: Bool = true
     ) throws {
-        try JSONEncoder()
-            .encode(value)
-            .base64EncodedData()
-            .write(to: documentDirectoryURL.appendingPathComponent(filename))
+        var data = try JSONEncoder().encode(value)
+        
+        if base64Encoded {
+            data = data.base64EncodedData()
+        }
+        
+        try data.write(
+            to: documentDirectoryURL.appendingPathComponent(filename)
+        )
     }
     
     /// Delete a file
     static func delete(
         filename: String
     ) throws {
-        try FileManager.default.removeItem(at: documentDirectoryURL.appendingPathComponent(filename))
+        try FileManager.default.removeItem(
+            at: documentDirectoryURL.appendingPathComponent(filename)
+        )
     }
 }
