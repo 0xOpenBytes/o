@@ -47,24 +47,20 @@ struct Post: Codable {
 
 // GET Request
 
-o.url.in(
-    url: URL(string: "api/posts")!,
-    successHandler: { (posts: [Post], response) in
-        print(posts)
-    }
+let (data, response) = try await o.url.get(
+    url: URL(string: "api/posts")!
 )
 
 // POST Request
 
 let post = Post(userId: 1, id: 1, title: "First!", body: "")
 
-try o.url.out(
+let (_, response) = try await o.url.post(
     url: URL(string: "api/posts/\(post.id)")!,
-    value: post,
-    successHandler: { data, response in
-        print(response)
-    }
+    body: try? JSONEncoder().encode(post)
 )
+
+print(response)
 ```
 
 ### o.notification
