@@ -9,97 +9,181 @@ import Foundation
 
 public extension o {
     /// Input and Output using URLSession
-    enum url { }
+    enum url {
+        enum HTTPRequestMethod: String {
+            case GET
+            case HEAD
+            case POST
+            case PUT
+            case DELETE
+            case CONNECT
+            case OPTIONS
+            case TRACE
+            case PATCH
+        }
+
+        private static func request(
+            for url: URL,
+            method : HTTPRequestMethod,
+            headerFields: [String: String]
+        ) -> URLRequest {
+            var request = URLRequest(url: url)
+
+            request.httpMethod = method.rawValue
+            request.allHTTPHeaderFields = headerFields
+
+            return request
+        }
+    }
 }
 
+// MARK: - Async/ Await
+
 public extension o.url {
-    /// GET
-    static func `in`<Value: Decodable>(
+    static func `get`(
         url: URL,
         headerFields: [String: String] = [
             "Content-Type": "application/json; charset=utf-8"
-        ],
-        successHandler: @escaping (Value, URLResponse) -> Void,
-        errorHandler: @escaping (Error) -> Void = {
-            o.console.out($0.localizedDescription)
-        },
-        noResponseHandler: @escaping () -> Void = {
-            o.console.out("No URL Response")
-        },
-        failureHandler: @escaping (URLResponse) -> Void = {
-            o.console.out("No Data (\(dump($0)))")
-        },
-        decodingErrorHandler: @escaping (Error) -> Void = {
-            o.console.out($0.localizedDescription)
-        }
-    ) {
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headerFields
-        
-        URLSession.shared
-            .dataTask(
-                with: request,
-                completionHandler: { data, response, error in
-                    if let error = error {
-                        errorHandler(error)
-                    }
-                    
-                    guard let response = response else {
-                        noResponseHandler()
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        failureHandler(response)
-                        return
-                    }
-                    
-                    if let data = data as? Value {
-                        successHandler(data, response)
-                        return
-                    }
-                    
-                    do {
-                        let value = try JSONDecoder()
-                            .decode(Value.self, from: data)
-                        successHandler(value, response)
-                    } catch {
-                        decodingErrorHandler(error)
-                    }
-                }
+        ]
+    ) async throws -> (Data?, URLResponse?) {
+        try await URLSession.shared.data(
+            for: request(
+                for: url,
+                method: .GET,
+                headerFields: headerFields
             )
-            .resume()
+        )
     }
-    
-    /// POST
-    static func out<Value: Encodable>(
+
+    static func head(
         url: URL,
-        value: Value,
+        headerFields: [String: String]
+    ) async throws -> URLResponse? {
+        try await URLSession.shared.data(
+            for: request(
+                for: url,
+                method: .HEAD,
+                headerFields: headerFields
+            )
+        ).1
+    }
+
+    static func connect(
+        url: URL,
+        headerFields: [String: String]
+    ) async throws -> (Data?, URLResponse?) {
+        try await URLSession.shared.data(
+            for: request(
+                for: url,
+                method: .CONNECT,
+                headerFields: headerFields
+            )
+        )
+    }
+
+    static func options(
+        url: URL,
+        headerFields: [String: String]
+    ) async throws -> (Data?, URLResponse?) {
+        try await URLSession.shared.data(
+            for: request(
+                for: url,
+                method: .OPTIONS,
+                headerFields: headerFields
+            )
+        )
+    }
+
+    static func trace(
+        url: URL,
+        headerFields: [String: String]
+    ) async throws -> URLResponse? {
+        try await URLSession.shared.data(
+            for: request(
+                for: url,
+                method: .TRACE,
+                headerFields: headerFields
+            )
+        ).1
+    }
+
+    static func post(
+        url: URL,
+        body: Data?,
         headerFields: [String: String] = [
             "Content-Type": "application/json; charset=utf-8"
-        ],
-        successHandler: @escaping (Data?, URLResponse?) -> Void,
-        errorHandler: @escaping (Error) -> Void = { _ in }
-    ) throws {
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = "POST"
-        request.httpBody = try JSONEncoder().encode(value)
-        request.allHTTPHeaderFields = headerFields
-        
-        URLSession.shared
-            .dataTask(
-                with: request,
-                completionHandler: { data, response, error in
-                    if let error = error {
-                        errorHandler(error)
-                    } else {
-                        successHandler(data, response)
-                    }
-                }
-            )
-            .resume()
+        ]
+    ) async throws -> (Data?, URLResponse?) {
+        var request = request(
+            for: url,
+            method: .POST,
+            headerFields: headerFields
+        )
+
+        request.httpBody = body
+
+        return try await URLSession.shared.data(
+            for: request
+        )
+    }
+
+    static func put(
+        url: URL,
+        body: Data?,
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8"
+        ]
+    ) async throws -> URLResponse? {
+        var request = request(
+            for: url,
+            method: .PUT,
+            headerFields: headerFields
+        )
+
+        request.httpBody = body
+
+        return try await URLSession.shared.data(
+            for: request
+        ).1
+    }
+
+    static func patch(
+        url: URL,
+        body: Data?,
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8"
+        ]
+    ) async throws -> (Data?, URLResponse?) {
+        var request = request(
+            for: url,
+            method: .PATCH,
+            headerFields: headerFields
+        )
+
+        request.httpBody = body
+
+        return try await URLSession.shared.data(
+            for: request
+        )
+    }
+
+    static func delete(
+        url: URL,
+        body: Data?,
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8"
+        ]
+    ) async throws -> (Data?, URLResponse?) {
+        var request = request(
+            for: url,
+            method: .DELETE,
+            headerFields: headerFields
+        )
+
+        request.httpBody = body
+
+        return try await URLSession.shared.data(
+            for: request
+        )
     }
 }
