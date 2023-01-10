@@ -58,77 +58,101 @@ public extension o.url {
     static func `get`(
         url: URL,
         headerFields: [String: String] = [
-            "Content-Type": "application/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
         ]
-    ) async throws -> (Data?, URLResponse?) {
-        try await URLSession.shared.data(
-            for: request(
-                for: url,
-                method: .GET,
-                headerFields: headerFields
+    ) async throws -> DataResponse {
+        DataResponse(
+            try await URLSession.shared.data(
+                for: request(
+                    for: url,
+                    method: .GET,
+                    headerFields: headerFields
+                )
             )
         )
     }
 
     static func head(
         url: URL,
-        headerFields: [String: String]
-    ) async throws -> URLResponse? {
-        try await URLSession.shared.data(
-            for: request(
-                for: url,
-                method: .HEAD,
-                headerFields: headerFields
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
+        ]
+    ) async throws -> DataResponse {
+        DataResponse(
+            try await URLSession.shared.data(
+                for: request(
+                    for: url,
+                    method: .HEAD,
+                    headerFields: headerFields
+                )
             )
-        ).1
+        )
     }
 
     static func connect(
         url: URL,
-        headerFields: [String: String]
-    ) async throws -> (Data?, URLResponse?) {
-        try await URLSession.shared.data(
-            for: request(
-                for: url,
-                method: .CONNECT,
-                headerFields: headerFields
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
+        ]
+    ) async throws -> DataResponse {
+        DataResponse(
+            try await URLSession.shared.data(
+                for: request(
+                    for: url,
+                    method: .CONNECT,
+                    headerFields: headerFields
+                )
             )
         )
     }
 
     static func options(
         url: URL,
-        headerFields: [String: String]
-    ) async throws -> (Data?, URLResponse?) {
-        try await URLSession.shared.data(
-            for: request(
-                for: url,
-                method: .OPTIONS,
-                headerFields: headerFields
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
+        ]
+    ) async throws -> DataResponse {
+        DataResponse(
+            try await URLSession.shared.data(
+                for: request(
+                    for: url,
+                    method: .OPTIONS,
+                    headerFields: headerFields
+                )
             )
         )
     }
 
     static func trace(
         url: URL,
-        headerFields: [String: String]
-    ) async throws -> URLResponse? {
-        try await URLSession.shared.data(
-            for: request(
-                for: url,
-                method: .TRACE,
-                headerFields: headerFields
+        headerFields: [String: String] = [
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
+        ]
+    ) async throws -> DataResponse {
+        DataResponse(
+            try await URLSession.shared.data(
+                for: request(
+                    for: url,
+                    method: .TRACE,
+                    headerFields: headerFields
+                )
             )
-        ).1
+        )
     }
 
     static func post(
         url: URL,
         body: Data?,
         headerFields: [String: String] = [
-            "Content-Type": "application/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
         ]
-    ) async throws -> (Data?, URLResponse?) {
+    ) async throws -> DataResponse {
         var request = request(
             for: url,
             method: .POST,
@@ -137,8 +161,10 @@ public extension o.url {
 
         request.httpBody = body
 
-        return try await URLSession.shared.data(
-            for: request
+        return DataResponse(
+            try await URLSession.shared.data(
+                for: request
+            )
         )
     }
 
@@ -146,9 +172,10 @@ public extension o.url {
         url: URL,
         body: Data?,
         headerFields: [String: String] = [
-            "Content-Type": "application/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
         ]
-    ) async throws -> URLResponse? {
+    ) async throws -> DataResponse {
         var request = request(
             for: url,
             method: .PUT,
@@ -157,18 +184,21 @@ public extension o.url {
 
         request.httpBody = body
 
-        return try await URLSession.shared.data(
-            for: request
-        ).1
+        return DataResponse(
+            try await URLSession.shared.data(
+                for: request
+            )
+        )
     }
 
     static func patch(
         url: URL,
         body: Data?,
         headerFields: [String: String] = [
-            "Content-Type": "application/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
         ]
-    ) async throws -> (Data?, URLResponse?) {
+    ) async throws -> DataResponse {
         var request = request(
             for: url,
             method: .PATCH,
@@ -177,8 +207,10 @@ public extension o.url {
 
         request.httpBody = body
 
-        return try await URLSession.shared.data(
-            for: request
+        return DataResponse(
+            try await URLSession.shared.data(
+                for: request
+            )
         )
     }
 
@@ -188,7 +220,7 @@ public extension o.url {
         headerFields: [String: String] = [
             "Content-Type": "application/json; charset=utf-8"
         ]
-    ) async throws -> (Data?, URLResponse?) {
+    ) async throws -> DataResponse {
         var request = request(
             for: url,
             method: .DELETE,
@@ -197,8 +229,10 @@ public extension o.url {
 
         request.httpBody = body
 
-        return try await URLSession.shared.data(
-            for: request
+        return DataResponse(
+            try await URLSession.shared.data(
+                for: request
+            )
         )
     }
 }
