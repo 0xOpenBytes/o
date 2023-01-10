@@ -10,6 +10,21 @@ import Foundation
 public extension o {
     /// Input and Output using URLSession
     enum url {
+        public struct DataResponse {
+            public let data: Data?
+            public let response: URLResponse?
+
+            init(data: Data?, response: URLResponse?) {
+                self.data = data
+                self.response = response
+            }
+
+            init(_ tuple: (Data?, URLResponse?)) {
+                self.data = tuple.0
+                self.response = tuple.1
+            }
+        }
+
         enum HTTPRequestMethod: String {
             case GET
             case HEAD
