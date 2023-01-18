@@ -218,7 +218,8 @@ public extension o.url {
         url: URL,
         body: Data?,
         headerFields: [String: String] = [
-            "Content-Type": "application/json; charset=utf-8"
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json"
         ]
     ) async throws -> DataResponse {
         var request = request(
