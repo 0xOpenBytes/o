@@ -163,12 +163,11 @@ public extension o.file {
 
         var data = try JSONEncoder().encode(value)
         
-        if base64Encoded {
-            data = data.base64EncodedData()
-        }
-        
-        try data.write(
-            to: directoryURL.appendingPathComponent(filename)
+        try out(
+            data: data,
+            path: path,
+            filename: filename,
+            base64Encoded: base64Encoded
         )
     }
 
@@ -191,6 +190,32 @@ public extension o.file {
         let directoryURL = URL(fileURLWithPath: path)
 
         var data = string.data(using: stringEncoding) ?? Data()
+
+        try out(
+            data: data,
+            path: path,
+            filename: filename,
+            base64Encoded: base64Encoded
+        )
+    }
+
+    /// Write data to a file
+    ///
+    /// - Parameters:
+    ///   - value: The data to write to the file.
+    ///   - path: The path to the directory where the file should be written. The default is `.`, which means the current working directory.
+    ///   - filename: The name of the file to write.
+    ///   - base64Encoded: A Boolean value indicating whether the data should be Base64-encoded before writing to the file. The default is `true`.
+    /// - Throws: If there's an error writing the data to the file.
+    static func out(
+        data: Data,
+        path: String = ".",
+        filename: String,
+        base64Encoded: Bool = true
+    ) throws {
+        let directoryURL = URL(fileURLWithPath: path)
+
+        var data = data
 
         if base64Encoded {
             data = data.base64EncodedData()
