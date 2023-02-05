@@ -9,7 +9,13 @@ import Foundation
 
 public extension o {
     /// The `o` namespace for Input and Output using `FileManager`.
-    enum file { }
+    enum file {
+        public enum FileError: String, LocalizedError {
+            case invalidStringFromData = "Data could not be converted the a String."
+
+            public var errorDescription: String? { rawValue }
+        }
+    }
 }
 
 public extension o.file {
@@ -119,13 +125,7 @@ public extension o.file {
         )
 
         guard let string = String(data: data, encoding: encoding) else {
-            struct InvalidStringFromData: LocalizedError {
-                var errorDescription: String? {
-                    "Data could not be converted the a String."
-                }
-            }
-
-            throw InvalidStringFromData()
+            throw FileError.invalidStringFromData
         }
 
         return string
@@ -195,7 +195,9 @@ public extension o.file {
         using stringEncoding: String.Encoding = .utf8,
         base64Encoded: Bool = true
     ) throws {
-        let data = string.data(using: stringEncoding) ?? Data()
+        guard let data = string.data(using: stringEncoding) else {
+            throw FileError.invalidStringFromData
+        }
 
         try out(
             data: data,
