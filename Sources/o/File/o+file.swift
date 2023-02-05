@@ -99,6 +99,27 @@ public extension o.file {
 
         return try JSONDecoder().decode(Value.self, from: data)
     }
+
+    /// Read a file's data as the type `String`
+    ///
+    /// - Parameters:
+    ///   - path: The path to the directory containing the file. The default is `.`, which means the current working directory.
+    ///   - filename: The name of the file to read.
+    ///   - encoding: The String.Encoding to use to get the string.
+    /// - Returns: The file's data decoded as an instance of `String`.
+    /// - Throws: If there's an error reading the file or decoding its data.
+    static func string(
+        path: String = ".",
+        filename: String,
+        encoding: String.Encoding = .utf8
+    ) throws -> String? {
+        let data = try data(
+            path: path,
+            filename: filename
+        )
+
+        return String(data: data, encoding: encoding)
+    }
     
     /// Read a file's data
     ///
@@ -124,7 +145,7 @@ public extension o.file {
         return base64DecodedData
     }
     
-    /// Write data to a file
+    /// Write data to a file using a JSONEncoder
     ///
     /// - Parameters:
     ///   - value: The data to write to the file. It must conform to the `Encodable` protocol.
@@ -146,6 +167,35 @@ public extension o.file {
             data = data.base64EncodedData()
         }
         
+        try data.write(
+            to: directoryURL.appendingPathComponent(filename)
+        )
+    }
+
+    /// Write a string to a file
+    ///
+    /// - Parameters:
+    ///   - string: The string to write to the file.
+    ///   - path: The path to the directory where the file should be written. The default is `.`, which means the current working directory.
+    ///   - filename: The name of the file to write.
+    ///   - using: The String.Encoding to encode the string with. The default is `.utf8`.
+    ///   - base64Encoded: A Boolean value indicating whether the data should be Base64-encoded before writing to the file. The default is `true`.
+    /// - Throws: If there's an error writing the data to the file.
+    static func out(
+        string: String,
+        path: String = ".",
+        filename: String,
+        using stringEncoding: String.Encoding = .utf8,
+        base64Encoded: Bool = true
+    ) throws {
+        let directoryURL = URL(fileURLWithPath: path)
+
+        var data = string.data(using: stringEncoding) ?? Data()
+
+        if base64Encoded {
+            data = data.base64EncodedData()
+        }
+
         try data.write(
             to: directoryURL.appendingPathComponent(filename)
         )

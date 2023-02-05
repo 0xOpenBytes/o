@@ -33,4 +33,22 @@ final class oTests: XCTestCase {
         try o.file.removeItem(atPath: folderPath)
         XCTAssertFalse(try o.file.fileExists(atPath: folderPath))
     }
+
+    func testStrings() throws {
+        let fileContents = "Hello, World"
+        let filename = "SomeNumber"
+
+
+        XCTAssertFalse(try o.file.fileExists(atPath: filename))
+        try o.file.out(string: fileContents, filename: filename, base64Encoded: false)
+        XCTAssertTrue(try o.file.fileExists(atPath: filename))
+
+
+        XCTAssertEqual(try o.file.string(filename: filename), "Hello, World")
+
+        // Remove
+
+        try o.file.delete(filename: filename)
+        XCTAssertFalse(try o.file.fileExists(atPath: filename))
+    }
 }
