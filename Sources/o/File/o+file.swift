@@ -112,13 +112,23 @@ public extension o.file {
         path: String = ".",
         filename: String,
         encoding: String.Encoding = .utf8
-    ) throws -> String? {
+    ) throws -> String {
         let data = try data(
             path: path,
             filename: filename
         )
 
-        return String(data: data, encoding: encoding)
+        guard let string = String(data: data, encoding: encoding) else {
+            struct InvalidStringFromData: LocalizedError {
+                var errorDescription: String? {
+                    "Data could not be converted the a String."
+                }
+            }
+
+            throw InvalidStringFromData()
+        }
+
+        return string
     }
     
     /// Read a file's data
@@ -132,7 +142,7 @@ public extension o.file {
         path: String = ".",
         filename: String
     ) throws -> Data {
-        let directoryURL = URL(fileURLWithPath: path)
+        let directoryURL: URL = url(filePath: path)
 
         let fileData = try Data(
             contentsOf: directoryURL.appendingPathComponent(filename)
@@ -159,9 +169,7 @@ public extension o.file {
         filename: String,
         base64Encoded: Bool = true
     ) throws {
-        let directoryURL = URL(fileURLWithPath: path)
-
-        var data = try JSONEncoder().encode(value)
+        let data = try JSONEncoder().encode(value)
         
         try out(
             data: data,
@@ -187,9 +195,7 @@ public extension o.file {
         using stringEncoding: String.Encoding = .utf8,
         base64Encoded: Bool = true
     ) throws {
-        let directoryURL = URL(fileURLWithPath: path)
-
-        var data = string.data(using: stringEncoding) ?? Data()
+        let data = string.data(using: stringEncoding) ?? Data()
 
         try out(
             data: data,
@@ -213,7 +219,7 @@ public extension o.file {
         filename: String,
         base64Encoded: Bool = true
     ) throws {
-        let directoryURL = URL(fileURLWithPath: path)
+        let directoryURL: URL = url(filePath: path)
 
         var data = data
 
@@ -236,10 +242,22 @@ public extension o.file {
         path: String = ".",
         filename: String
     ) throws {
-        let directoryURL = URL(fileURLWithPath: path)
+        let directoryURL: URL = url(filePath: path)
 
         try fileManager.removeItem(
             at: directoryURL.appendingPathComponent(filename)
         )
+    }
+}
+
+// MARK: - Private Helpers
+
+private extension o.file {
+    static func url(filePath: String) -> URL {
+        if #available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *) {
+            return URL(filePath: filePath)
+        } else {
+            return URL(fileURLWithPath: filePath)
+        }
     }
 }
