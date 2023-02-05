@@ -20,20 +20,23 @@ o.console.out(o.console.in()) // Type in "???";         (oTests/oTests.swift@8) 
 
 ### o.file
 ```swift
-let filename: String = ...
+let fileContents = 4
+let folderPath = "./TestFolder"
+let filename = "SomeNumber"
 
-// Write the value 4, an Int, to the file named `filename`. Files using o.file are base64Encoded.
-try o.file.out(4, filename: filename)
+try o.file.createDirectory(path: folderPath)
+
+// Write the value 4, an Int, to a file named `filename` in the `folderPath` directory. Files using o.file are base64Encoded by default.
+try o.file.out(fileContents, path: folderPath, filename: filename, base64Encoded: false)
 
 // Asserts
-XCTAssertNoThrow(try o.file.in(filename: filename) as Int)
-XCTAssertEqual(try? o.file.in(filename: filename), 4)
+XCTAssertEqual(try o.file.in(path: folderPath, filename: filename), 4)
 
 // Delete the File
-try o.file.delete(filename: filename)
+try o.file.delete(path: folderPath, filename: filename)
 
 // Assert deletion
-XCTAssertThrowsError(try o.file.in(filename: filename) as Int)
+XCTAssertThrowsError(try o.file.in(path: folderPath, filename: filename) as Int)
 ```
 
 ### o.url
