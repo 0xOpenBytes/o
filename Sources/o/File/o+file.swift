@@ -9,7 +9,13 @@ import Foundation
 
 public extension o {
     /// The `o` namespace for Input and Output using `FileManager`.
-    enum file { }
+    enum file {
+        public enum FileError: String, LocalizedError {
+            case invalidStringFromData = "Data could not be converted the a String."
+
+            public var errorDescription: String? { rawValue }
+        }
+    }
 }
 
 public extension o.file {
@@ -99,6 +105,31 @@ public extension o.file {
 
         return try JSONDecoder().decode(Value.self, from: data)
     }
+
+    /// Read a file's data as the type `String`
+    ///
+    /// - Parameters:
+    ///   - path: The path to the directory containing the file. The default is `.`, which means the current working directory.
+    ///   - filename: The name of the file to read.
+    ///   - encoding: The String.Encoding to use to get the string.
+    /// - Returns: The file's data decoded as an instance of `String`.
+    /// - Throws: If there's an error reading the file or decoding its data.
+    static func string(
+        path: String = ".",
+        filename: String,
+        encoding: String.Encoding = .utf8
+    ) throws -> String {
+        let data = try data(
+            path: path,
+            filename: filename
+        )
+
+        guard let string = String(data: data, encoding: encoding) else {
+            throw FileError.invalidStringFromData
+        }
+
+        return string
+    }
     
     /// Read a file's data
     ///
@@ -111,7 +142,7 @@ public extension o.file {
         path: String = ".",
         filename: String
     ) throws -> Data {
-        let directoryURL = URL(fileURLWithPath: path)
+        let directoryURL: URL = url(filePath: path)
 
         let fileData = try Data(
             contentsOf: directoryURL.appendingPathComponent(filename)
@@ -124,7 +155,7 @@ public extension o.file {
         return base64DecodedData
     }
     
-    /// Write data to a file
+    /// Write data to a file using a JSONEncoder
     ///
     /// - Parameters:
     ///   - value: The data to write to the file. It must conform to the `Encodable` protocol.
@@ -138,14 +169,66 @@ public extension o.file {
         filename: String,
         base64Encoded: Bool = true
     ) throws {
-        let directoryURL = URL(fileURLWithPath: path)
-
-        var data = try JSONEncoder().encode(value)
+        let data = try JSONEncoder().encode(value)
         
+        try out(
+            data: data,
+            path: path,
+            filename: filename,
+            base64Encoded: base64Encoded
+        )
+    }
+
+    /// Write a string to a file
+    ///
+    /// - Parameters:
+    ///   - string: The string to write to the file.
+    ///   - path: The path to the directory where the file should be written. The default is `.`, which means the current working directory.
+    ///   - filename: The name of the file to write.
+    ///   - using: The String.Encoding to encode the string with. The default is `.utf8`.
+    ///   - base64Encoded: A Boolean value indicating whether the data should be Base64-encoded before writing to the file. The default is `true`.
+    /// - Throws: If there's an error writing the data to the file.
+    static func out(
+        string: String,
+        path: String = ".",
+        filename: String,
+        using stringEncoding: String.Encoding = .utf8,
+        base64Encoded: Bool = true
+    ) throws {
+        guard let data = string.data(using: stringEncoding) else {
+            throw FileError.invalidStringFromData
+        }
+
+        try out(
+            data: data,
+            path: path,
+            filename: filename,
+            base64Encoded: base64Encoded
+        )
+    }
+
+    /// Write data to a file
+    ///
+    /// - Parameters:
+    ///   - value: The data to write to the file.
+    ///   - path: The path to the directory where the file should be written. The default is `.`, which means the current working directory.
+    ///   - filename: The name of the file to write.
+    ///   - base64Encoded: A Boolean value indicating whether the data should be Base64-encoded before writing to the file. The default is `true`.
+    /// - Throws: If there's an error writing the data to the file.
+    static func out(
+        data: Data,
+        path: String = ".",
+        filename: String,
+        base64Encoded: Bool = true
+    ) throws {
+        let directoryURL: URL = url(filePath: path)
+
+        var data = data
+
         if base64Encoded {
             data = data.base64EncodedData()
         }
-        
+
         try data.write(
             to: directoryURL.appendingPathComponent(filename)
         )
@@ -161,10 +244,22 @@ public extension o.file {
         path: String = ".",
         filename: String
     ) throws {
-        let directoryURL = URL(fileURLWithPath: path)
+        let directoryURL: URL = url(filePath: path)
 
         try fileManager.removeItem(
             at: directoryURL.appendingPathComponent(filename)
         )
+    }
+}
+
+// MARK: - Private Helpers
+
+private extension o.file {
+    static func url(filePath: String) -> URL {
+        if #available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *) {
+            return URL(filePath: filePath)
+        } else {
+            return URL(fileURLWithPath: filePath)
+        }
     }
 }
