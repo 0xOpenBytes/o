@@ -7,7 +7,7 @@
    </a>
    <img src="https://img.shields.io/github/v/release/0xOpenBytes/o"/>
    <a href="https://discord.gg/HUmaDXVsW7">
-     <img src="https://img.shields.io/discord/431917998102675485.svg" alt="Team Chat"/>
+     <img src="https://img.shields.io/discord/933406727150391376" alt="Community Chat"/>
    </a>
  </div>
 
