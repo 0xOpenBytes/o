@@ -1,6 +1,15 @@
-# o
-
-*Output and Input*
+<div align="center">
+   <img src="https://openbytes.dev/assets/projects/images/openbytes-o.png" alt="Icon representing the OpenBytes o project." width="35%"/>
+   <h1>o</h1>
+   <h3>Output and Input</h3>
+   <a href="https://github.com/0xOpenBytes/o/blob/main/LICENSE">
+     <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License"/>
+   </a>
+   <img src="https://img.shields.io/github/v/release/0xOpenBytes/o"/>
+   <a href="https://discord.gg/HUmaDXVsW7">
+     <img src="https://img.shields.io/discord/933406727150391376" alt="Community Chat"/>
+   </a>
+ </div>
 
 ## What is `o`?
 
