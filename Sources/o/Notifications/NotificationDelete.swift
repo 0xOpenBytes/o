@@ -5,7 +5,7 @@
 //  Created by Leif on 3/15/22.
 //
 
-#if canImport(UserNotifications)
+#if canImport(UserNotifications) && !os(tvOS)
 import UserNotifications
 
 public extension o.notification {
