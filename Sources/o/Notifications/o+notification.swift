@@ -1,4 +1,4 @@
-#if canImport(UserNotifications)
+#if canImport(UserNotifications) && !os(tvOS)
 import UserNotifications
 
 public extension o {
